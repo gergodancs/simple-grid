@@ -1,0 +1,37 @@
+<div class="table-container">
+    <div class="table-header">
+        <ng-container *ngFor="let headerCell of tableHeader; index as columnIndex">
+            <div class="table-cell header-cell"
+                 [ngStyle]="{ 'width.px': setCellWidth(columnIndex) }"
+                 (click)="sortData(columnIndex)">
+                {{ headerCell }}
+                <span *ngIf="currentSort.column === headerCell" class="sort-icon">
+                     <i class="fas fa-sm"
+                         [ngClass]="currentSort.direction === 'asc' ? 'fa-chevron-up' : currentSort.direction === 'desc'?'fa-chevron-down':''">
+                     </i>
+             </span>
+                <div class="separator" *ngIf="columnIndex !== tableHeader.length - 1"></div>
+            </div>
+
+        </ng-container>
+    </div>
+<!--    <div class="table-header search-container">
+            <div *ngFor="let headerCell of tableHeader; index as columnIndex" class="header-cell">
+                <input  [ngStyle]="{ 'width.px': setInputCellWidth(columnIndex) }"/>
+                <div class="separator" *ngIf="columnIndex !== tableHeader.length - 5"></div>
+            </div>
+
+    </div>-->
+
+    <div class="table-body">
+        <div *ngFor="let row of tableRows; index as rowIndex" class="table-row {{setRowStyle(rowIndex)}}">
+            <div *ngFor="let cell of row; index as cellIndex;"
+                 class="table-cell"
+                 (click)="setSelectedRow(rowIndex)"
+                 [ngStyle]="{ 'width.px': setCellWidth( cellIndex) }">
+                {{ cell }}
+            </div>
+        </div>
+    </div>
+</div>
+

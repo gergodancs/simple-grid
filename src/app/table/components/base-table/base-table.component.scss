@@ -1,0 +1,76 @@
+@import '@fortawesome/fontawesome-free/css/all.css';
+
+.table-container {
+  font-family: 'Roboto', sans-serif;
+  position: relative;
+  border: 1px solid lightgray;
+  border-radius: 3px;
+  width: fit-content;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
+  font-size: 13px;
+}
+
+.search-container {
+  padding: 3px;
+}
+
+.table-header {
+  display: flex;
+  border-bottom: 1px solid lightgray;
+  background-color: aliceblue;
+  font-weight: bolder;
+}
+
+.selected-row {
+  background-color: aliceblue;
+}
+
+.header-cell {
+  padding: 8px;
+  text-align: center;
+  position: relative;
+}
+
+.header-cell::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  height: calc(100% - 16px);
+  width: 1px;
+  background-color: lightgray;
+}
+
+.separator {
+  position: absolute;
+  height: 70%;
+  width: 1px;
+  background-color: lightgray;
+  right: 0;
+  top: 15%;
+}
+
+.header-cell {
+
+}
+
+
+.table-header, .table-row {
+  display: flex;
+  border-bottom: 1px solid lightgray;
+}
+
+.table-row:last-child {
+  border-bottom: none;
+}
+
+.table-cell {
+  padding: 8px;
+  text-align: center;
+}
+
+
+
