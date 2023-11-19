@@ -2,8 +2,8 @@ import {Component, Input, OnInit} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {RouterOutlet} from "@angular/router";
 import {applySorting, createMapFromTableData} from "../../utils/utils";
-import {FormGroup, ReactiveFormsModule} from "@angular/forms";
-import {ColumnProps, TableProps} from "../../models/table-models";
+import {ReactiveFormsModule} from "@angular/forms";
+import {TableProps} from "../../models/table-models";
 import {createSimpleTable, initTableHeaders} from "../../utils/init-utils";
 import {determineSortDirection} from "../../utils/sorting-utils";
 
@@ -26,13 +26,8 @@ export class TableComponent implements OnInit {
   tableHeader: string[] = [];
 
   tableRows: any[] = [];
-
-  filteredRows: any[] = [];
-
   mappedData: any[] = [];
-
   currentSort: { column: string, direction: 'asc' | 'desc' | undefined } = {column: '', direction: 'asc'};
-
   selectedRow: {
     rowIndex: number,
     data: {},
@@ -42,6 +37,7 @@ export class TableComponent implements OnInit {
     data: {},
     style: ""
   };
+  private _cashedTableRows: any[] = [];
 
   constructor() {
 
@@ -51,6 +47,7 @@ export class TableComponent implements OnInit {
     if (this.tableData && this.tableData.length > 0) {
       this.tableHeader = initTableHeaders(this.columnInitializer);
       this.tableRows = createSimpleTable(this.tableData, this.columnInitializer);
+      this._cashedTableRows = [...this.tableRows];
       this.mappedData = createMapFromTableData(this.tableData);
       console.log(this.mappedData);
     } else {
@@ -105,12 +102,12 @@ export class TableComponent implements OnInit {
 
   onFilterColumn($event: KeyboardEvent, columnIndex: number) {
     let searchTerm = ($event.target as HTMLInputElement).value;
-    const filteredTableData = this.tableRows.filter((row: any) => {
-      console.log(row)
-      return row[columnIndex].toString().toLowerCase().includes(searchTerm.toLowerCase());
-    });
-    console.log(filteredTableData);
-    this.filteredRows = Array.isArray(filteredTableData) ? filteredTableData : [filteredTableData];
-
+    if (searchTerm === '') {
+      this.tableRows = [...this._cashedTableRows];
+    } else {
+      this.tableRows = this.tableRows.filter((row: any) => {
+        return row[columnIndex].toString().toLowerCase().includes(searchTerm.toLowerCase());
+      });
+    }
   }
 }
