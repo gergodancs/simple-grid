@@ -27,6 +27,8 @@ export class TableComponent implements OnInit {
 
   tableRows: any[] = [];
 
+  filteredRows: any[] = [];
+
   mappedData: any[] = [];
 
   currentSort: { column: string, direction: 'asc' | 'desc' | undefined } = {column: '', direction: 'asc'};
@@ -64,6 +66,10 @@ export class TableComponent implements OnInit {
     }
   }
 
+  onFilterIconClick(event: Event) {
+    event.stopPropagation(); // Stops event propagation to the parent cell
+  }
+
   setRowStyle(rowIndex: number): string {
     if (this.selectedRow.rowIndex === rowIndex) {
       return "selected-row";
@@ -91,5 +97,20 @@ export class TableComponent implements OnInit {
     this.tableData = applySorting(currentColumn.header, currentColumn.sortDirection, [...this.tableData]);
     this.tableRows = createSimpleTable(this.tableData, this.columnInitializer);
     this.mappedData = createMapFromTableData([...this.tableData]);
+  }
+
+  filterInputClick($event: Event) {
+    $event!.stopPropagation();
+  }
+
+  onFilterColumn($event: KeyboardEvent, columnIndex: number) {
+    let searchTerm = ($event.target as HTMLInputElement).value;
+    const filteredTableData = this.tableRows.filter((row: any) => {
+      console.log(row)
+      return row[columnIndex].toString().toLowerCase().includes(searchTerm.toLowerCase());
+    });
+    console.log(filteredTableData);
+    this.filteredRows = Array.isArray(filteredTableData) ? filteredTableData : [filteredTableData];
+
   }
 }
