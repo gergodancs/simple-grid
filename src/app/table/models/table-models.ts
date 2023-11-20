@@ -11,4 +11,5 @@ export type ColumnProps = {
     width?: number;
     sortable?: boolean;
     sortDirection?: 'asc' | 'desc';
+    valueSetter?: (value: any) => string | number;
 }
