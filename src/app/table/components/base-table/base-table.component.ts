@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, OnInit, ViewChild} from "@angular/core";
+import {Component, Input, OnInit} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {RouterOutlet} from "@angular/router";
 import {applySorting, createMapFromTableData} from "../../utils/utils";
@@ -81,18 +81,18 @@ export class TableComponent implements OnInit {
   }
 
   setCellWidth(cellIndex: number): number | undefined {
-    return this.columnInitializer.columnProps[cellIndex].width;
+    return this.columnInitializer.columns[cellIndex].width;
   }
 
-  setInputWidth(cellIndex: number, input:HTMLElement): number | undefined {
+  setInputWidth(cellIndex: number, input: HTMLElement): number | undefined {
     input.focus();
-    return this.columnInitializer.columnProps[cellIndex].width;
+    return this.columnInitializer.columns[cellIndex].width;
 
   }
 
   setInputCellWidth(cellIndex: number): number {
-    if (this.columnInitializer.columnProps[cellIndex].width !== undefined) {
-      const {width} = this.columnInitializer!.columnProps[cellIndex]!;
+    if (this.columnInitializer.columns[cellIndex].width !== undefined) {
+      const {width} = this.columnInitializer!.columns[cellIndex]!;
       return width as number - 10;
     }
     return 0;

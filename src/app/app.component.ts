@@ -26,9 +26,8 @@ export class AppComponent {
   onRowSelected = (data: any) => console.log(data);
 
   columnInitializer: TableProps = {
-    headers: ['id', 'name', 'age', 'city', 'country', 'occupation'],
     onRowSelected: this.onRowSelected,
-    columnProps: [
+    columns: [
       {
         field: 'id',
         header: 'id',
