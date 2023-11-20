@@ -23,6 +23,11 @@ export class AppComponent {
     {id: 8, name: {firstName: "Mia"}, age: 29, city: 'Tokyo', country: 'Japan', occupation: 'Writer'},
   ];
 
+  dummyData2 = [
+    {id:1, name: "panka", age: 25, city: "New York", country: "USA"},
+    {id:1, name: "gergo", age: 25, city: "New York", country: "USA"}
+  ]
+
   onRowSelected = (data: any) => console.log(data);
 
   columnInitializer: TableProps = {
@@ -37,6 +42,7 @@ export class AppComponent {
         field: 'name',
         header: 'name',
         width: 100,
+        sortBy:'firstName',
         valueSetter: (data: any) => data.firstName
       },
       {

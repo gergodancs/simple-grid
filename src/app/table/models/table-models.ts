@@ -35,6 +35,7 @@ export type ColumnProps = {
   width?: number;
   sortable?: boolean;
   sortDirection?: 'asc' | 'desc';
+  sortBy?: string;
 
   /**
    * A function that transforms the raw data before displaying it in the table.
