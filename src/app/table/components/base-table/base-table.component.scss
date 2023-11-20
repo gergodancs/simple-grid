@@ -28,9 +28,27 @@
 }
 
 .header-cell {
+  display: flex;
+  justify-content: center;
+
   padding: 8px;
   text-align: center;
   position: relative;
+}
+
+i:hover{
+  cursor: pointer;
+}
+
+.header-text:hover{
+  cursor: pointer;
+}
+
+
+.header-icon-container{
+  margin-left: 3px;
+  display: flex;
+  gap: 3px;
 }
 
 .header-cell::after {
@@ -70,6 +88,17 @@
 .table-cell {
   padding: 8px;
   text-align: center;
+}
+
+.filter-input{
+  position: absolute;
+  padding: 2px;
+  top: 25px;
+  width: 50px;
+  border: 1px solid lightgray;
+  border-radius: 3px;
+  background-color: rgba(237, 242, 248, 0.73);
+outline:none;
 }
 
 

@@ -1,9 +1,9 @@
-import {Component, Input, OnInit} from "@angular/core";
+import {Component, ElementRef, Input, OnInit, ViewChild} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {RouterOutlet} from "@angular/router";
 import {applySorting, createMapFromTableData} from "../../utils/utils";
-import {FormGroup, ReactiveFormsModule} from "@angular/forms";
-import {ColumnProps, TableProps} from "../../models/table-models";
+import {ReactiveFormsModule} from "@angular/forms";
+import {TableProps} from "../../models/table-models";
 import {createSimpleTable, initTableHeaders} from "../../utils/init-utils";
 import {determineSortDirection} from "../../utils/sorting-utils";
 
@@ -17,6 +17,7 @@ import {determineSortDirection} from "../../utils/sorting-utils";
 })
 export class TableComponent implements OnInit {
 
+
   @Input()
   columnInitializer!: TableProps;
 
@@ -26,11 +27,8 @@ export class TableComponent implements OnInit {
   tableHeader: string[] = [];
 
   tableRows: any[] = [];
-
   mappedData: any[] = [];
-
   currentSort: { column: string, direction: 'asc' | 'desc' | undefined } = {column: '', direction: 'asc'};
-
   selectedRow: {
     rowIndex: number,
     data: {},
@@ -40,6 +38,8 @@ export class TableComponent implements OnInit {
     data: {},
     style: ""
   };
+  columnForFilter: number = -1;
+  private _cashedTableRows: any[] = [];
 
   constructor() {
 
@@ -49,19 +49,27 @@ export class TableComponent implements OnInit {
     if (this.tableData && this.tableData.length > 0) {
       this.tableHeader = initTableHeaders(this.columnInitializer);
       this.tableRows = createSimpleTable(this.tableData, this.columnInitializer);
+      this._cashedTableRows = [...this.tableRows];
       this.mappedData = createMapFromTableData(this.tableData);
-      console.log(this.mappedData);
     } else {
       this.tableHeader = initTableHeaders(this.columnInitializer);
     }
   }
 
   setSelectedRow(rowIndex: number): void {
+    this.columnForFilter = -1;
     this.selectedRow.data = this.tableData[rowIndex];
     this.selectedRow.rowIndex = rowIndex;
     if (this.columnInitializer.onRowSelected) {
       this.columnInitializer.onRowSelected(this.selectedRow.data);
     }
+  }
+
+  onFilterIconClick(event: Event, columnIndex: number): void {
+    event.stopPropagation();
+    this.columnForFilter = columnIndex;
+
+
   }
 
   setRowStyle(rowIndex: number): string {
@@ -74,6 +82,12 @@ export class TableComponent implements OnInit {
 
   setCellWidth(cellIndex: number): number | undefined {
     return this.columnInitializer.columnProps[cellIndex].width;
+  }
+
+  setInputWidth(cellIndex: number, input:HTMLElement): number | undefined {
+    input.focus();
+    return this.columnInitializer.columnProps[cellIndex].width;
+
   }
 
   setInputCellWidth(cellIndex: number): number {
@@ -91,5 +105,20 @@ export class TableComponent implements OnInit {
     this.tableData = applySorting(currentColumn.header, currentColumn.sortDirection, [...this.tableData]);
     this.tableRows = createSimpleTable(this.tableData, this.columnInitializer);
     this.mappedData = createMapFromTableData([...this.tableData]);
+  }
+
+  filterInputClick($event: Event, columnIndex: number) {
+    $event!.stopPropagation();
+  }
+
+  onFilterColumn($event: KeyboardEvent, columnIndex: number) {
+    let searchTerm = ($event.target as HTMLInputElement).value;
+    if (searchTerm === '') {
+      this.tableRows = [...this._cashedTableRows];
+    } else {
+      this.tableRows = this.tableRows.filter((row: any) => {
+        return row[columnIndex].toString().toLowerCase().includes(searchTerm.toLowerCase());
+      });
+    }
   }
 }
