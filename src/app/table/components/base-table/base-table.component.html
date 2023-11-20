@@ -11,22 +11,23 @@
                [ngClass]="currentSort.direction === 'asc' ? 'fa-chevron-up' : currentSort.direction === 'desc'?'fa-chevron-down':''">
             </i>
           </span>
-          <span (click)="onFilterIconClick($event)">
+          <span (click)="onFilterIconClick($event, columnIndex)">
             <i class="fas fa-filter fa-sm filter-icon"></i>
           </span>
         </div>
-        <input
-          class="filter-input"
-          [ngStyle]="{ 'width.px': setCellWidth( columnIndex) }"
-          type="text"
-          (keyup)="onFilterColumn($event, columnIndex)"
-        (click)="filterInputClick($event)">
+        <input #filterInput
+               *ngIf="columnIndex===columnForFilter"
+               class="filter-input"
+               [ngStyle]="{ 'width.px': setInputWidth(columnIndex, filterInput) }"
+               type="text"
+               (keyup)="onFilterColumn($event, columnIndex)"
+               (click)="filterInputClick($event, columnIndex)">
         <div class="separator" *ngIf="columnIndex !== tableHeader.length - 1"></div>
       </div>
     </ng-container>
   </div>
 
-  <div  *ngIf="tableRows.length>0" class="table-body">
+  <div *ngIf="tableRows.length>0" class="table-body">
 
     <div *ngFor="let row of tableRows; index as rowIndex" class="table-row {{setRowStyle(rowIndex)}}">
       <div *ngFor="let cell of row; index as cellIndex;"

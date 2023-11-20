@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from "@angular/core";
+import {Component, ElementRef, Input, OnInit, ViewChild} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {RouterOutlet} from "@angular/router";
 import {applySorting, createMapFromTableData} from "../../utils/utils";
@@ -16,6 +16,7 @@ import {determineSortDirection} from "../../utils/sorting-utils";
   styleUrls: ['./base-table.component.scss']
 })
 export class TableComponent implements OnInit {
+
 
   @Input()
   columnInitializer!: TableProps;
@@ -37,6 +38,7 @@ export class TableComponent implements OnInit {
     data: {},
     style: ""
   };
+  columnForFilter: number = -1;
   private _cashedTableRows: any[] = [];
 
   constructor() {
@@ -49,13 +51,13 @@ export class TableComponent implements OnInit {
       this.tableRows = createSimpleTable(this.tableData, this.columnInitializer);
       this._cashedTableRows = [...this.tableRows];
       this.mappedData = createMapFromTableData(this.tableData);
-      console.log(this.mappedData);
     } else {
       this.tableHeader = initTableHeaders(this.columnInitializer);
     }
   }
 
   setSelectedRow(rowIndex: number): void {
+    this.columnForFilter = -1;
     this.selectedRow.data = this.tableData[rowIndex];
     this.selectedRow.rowIndex = rowIndex;
     if (this.columnInitializer.onRowSelected) {
@@ -63,8 +65,11 @@ export class TableComponent implements OnInit {
     }
   }
 
-  onFilterIconClick(event: Event) {
-    event.stopPropagation(); // Stops event propagation to the parent cell
+  onFilterIconClick(event: Event, columnIndex: number): void {
+    event.stopPropagation();
+    this.columnForFilter = columnIndex;
+
+
   }
 
   setRowStyle(rowIndex: number): string {
@@ -77,6 +82,12 @@ export class TableComponent implements OnInit {
 
   setCellWidth(cellIndex: number): number | undefined {
     return this.columnInitializer.columnProps[cellIndex].width;
+  }
+
+  setInputWidth(cellIndex: number, input:HTMLElement): number | undefined {
+    input.focus();
+    return this.columnInitializer.columnProps[cellIndex].width;
+
   }
 
   setInputCellWidth(cellIndex: number): number {
@@ -96,7 +107,7 @@ export class TableComponent implements OnInit {
     this.mappedData = createMapFromTableData([...this.tableData]);
   }
 
-  filterInputClick($event: Event) {
+  filterInputClick($event: Event, columnIndex: number) {
     $event!.stopPropagation();
   }
 
