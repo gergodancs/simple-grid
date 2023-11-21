@@ -20,7 +20,8 @@
              [ngStyle]="{ 'width.px': setInputWidth(columnIndex, filterInput) }"
              type="text"
              (keyup)="onFilterColumn($event)"
-             (click)="filterInputClick($event, columnIndex)">
+             (click)="filterInputClick($event, columnIndex)"
+      (blur)="onFilterInputBlur()">
       <div class="separator" *ngIf="columnIndex !== headerLength"></div>
     </div>
   </ng-container>

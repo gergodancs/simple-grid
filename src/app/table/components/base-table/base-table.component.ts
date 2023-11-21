@@ -42,12 +42,14 @@ export class TableComponent implements OnInit, OnDestroy {
   filterValue$: Observable<string> = this.service.filterValue$;
   private ngUnsubscribe: Subject<void> = new Subject<void>();
   private _cashedTableRows: any[] = [];
+
+
   filterSubscription$ = this.columnToFilter$.pipe(
     switchMap((columnIndex) => {
       return this.filterValue$.pipe(
         map((filterValue: string) => {
           if (filterValue === '') {
-            this.tableRows = [...this._cashedTableRows];
+           // it runs when the filter is cleared or toggle between filter inputs
           } else {
             this.tableRows = this._cashedTableRows.filter((row: any) => {
               return row[columnIndex].toString().toLowerCase().includes(filterValue.toLowerCase());

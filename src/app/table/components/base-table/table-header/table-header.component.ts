@@ -51,6 +51,7 @@ export class TableHeaderComponent implements OnInit {
 
   onFilterIconClick(event: Event, columnIndex: number): void {
     event.stopPropagation();
+    // this.service.setFilterValue('');
     this.service.setColumnToFilter(columnIndex);
   }
 
@@ -63,5 +64,9 @@ export class TableHeaderComponent implements OnInit {
   onFilterColumn($event: KeyboardEvent) {
     let searchTerm = ($event.target as HTMLInputElement).value;
     this.service.setFilterValue(searchTerm)
+  }
+
+  onFilterInputBlur() {
+    this.service.setColumnToFilter(-1);
   }
 }
