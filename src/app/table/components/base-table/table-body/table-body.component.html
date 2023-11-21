@@ -1,0 +1,10 @@
+<div *ngIf="hasData$ | async" class="table-body">
+  <div *ngFor="let row of tableRows$ | async; index as rowIndex" class="table-row {{setSelectedRowStyle(rowIndex)}}">
+    <div *ngFor="let cell of row; index as cellIndex;"
+         class="table-cell"
+         (click)="setSelectedRow(rowIndex)"
+         [ngStyle]="{ 'width.px': setCellWidth( cellIndex) }">
+      {{ cell }}
+    </div>
+  </div>
+</div>

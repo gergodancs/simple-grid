@@ -9,12 +9,13 @@ import {applySortBySortProp, applySorting, determineSortDirection} from "../../u
 import {TableDataService} from "../../service/table-service";
 import {map, Observable, Subject, switchMap, takeUntil} from "rxjs";
 import {TableHeaderComponent} from "./table-header/table-header.component";
+import {TableBodyComponent} from "./table-body/table-body.component";
 
 
 @Component({
   selector: 'd-table',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, ReactiveFormsModule, TableHeaderComponent],
+  imports: [CommonModule, RouterOutlet, ReactiveFormsModule, TableHeaderComponent, TableBodyComponent],
   templateUrl: './base-table.component.html',
   styleUrls: ['./base-table.component.scss']
 })
@@ -48,12 +49,14 @@ export class TableComponent implements OnInit, OnDestroy {
     switchMap((columnIndex) => {
       return this.filterValue$.pipe(
         map((filterValue: string) => {
-          if (filterValue === '') {
-           // it runs when the filter is cleared or toggle between filter inputs
+          if (filterValue === '' && columnIndex === -1) {
+            // it runs when the filter is cleared or toggle between filter inputs
+           // this.service.setTableRowData([...this._cashedTableRows]);
           } else {
-            this.tableRows = this._cashedTableRows.filter((row: any) => {
+            let filteredTableRows = this._cashedTableRows.filter((row: any) => {
               return row[columnIndex].toString().toLowerCase().includes(filterValue.toLowerCase());
             });
+            this.service.setTableRowData(filteredTableRows);
           }
         }),
         takeUntil(this.ngUnsubscribe),
@@ -69,6 +72,7 @@ export class TableComponent implements OnInit, OnDestroy {
     if (this.tableData && this.tableData.length > 0) {
       this.service.setTableHeader(initTableHeaders(this.columnInitializer));
       this.service.setColumnInitializer(this.columnInitializer);
+      this.service.setTableRowData(createSimpleTable(this.tableData, this.columnInitializer))
       this.tableHeader = initTableHeaders(this.columnInitializer);
       this.tableRows = createSimpleTable(this.tableData, this.columnInitializer);
       this._cashedTableRows = [...this.tableRows];
@@ -86,33 +90,13 @@ export class TableComponent implements OnInit, OnDestroy {
     }
   }
 
-  setSelectedRow(rowIndex: number): void {
-    this.columnForFilter = -1;
-    this.selectedRow.data = this.tableData[rowIndex];
-    this.selectedRow.rowIndex = rowIndex;
-    if (this.columnInitializer.onRowSelected) {
-      this.columnInitializer.onRowSelected(this.selectedRow.data);
-    }
-  }
-
-  setRowStyle(rowIndex: number): string {
-    if (this.selectedRow.rowIndex === rowIndex) {
-      return "selected-row";
-    } else {
-      return "";
-    }
-  }
-
-  setCellWidth(cellIndex: number): number | undefined {
-    return this.columnInitializer.columns[cellIndex].width;
-  }
-
   sortData(columnIndex: number) {
     const {currentSort, currentColumn} = determineSortDirection(this.currentSort, this.columnInitializer, columnIndex);
     this.currentSort = currentSort
     this.tableData = !currentColumn.sortBy ?
       applySorting(currentColumn, [...this.tableData]) :
       applySortBySortProp(currentColumn, [...this.tableData]);
+    this.service.setTableRowData(createSimpleTable(this.tableData, this.columnInitializer));
     this.tableRows = createSimpleTable(this.tableData, this.columnInitializer);
     this.mappedData = createMapFromTableData([...this.tableData]);
   }

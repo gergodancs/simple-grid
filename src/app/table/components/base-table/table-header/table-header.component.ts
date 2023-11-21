@@ -16,7 +16,7 @@ import {TableProps} from "../../../models/table-models";
 })
 export class TableHeaderComponent implements OnInit {
 
-  tableHeader: Observable<string[]> = this.service.tableHeader$;
+  tableHeader$: Observable<string[]> = this.service.tableHeader$;
   headerLength$: Observable<number> = this.service.headerLength$;
   columnInitializer: TableProps = {columns: []};
   columnForFilter: Observable<number> = this.service.columnToFilter$;
@@ -26,7 +26,7 @@ export class TableHeaderComponent implements OnInit {
   headerLength: number = -1;
 
   constructor(private service: TableDataService) {
-    this.tableHeader = service.tableHeader$
+    this.tableHeader$ = service.tableHeader$
 
   }
 

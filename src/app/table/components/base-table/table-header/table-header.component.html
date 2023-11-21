@@ -1,5 +1,5 @@
 <div class="table-header">
-  <ng-container *ngFor="let headerCell of tableHeader | async; index as columnIndex">
+  <ng-container *ngFor="let headerCell of tableHeader$ | async; index as columnIndex">
     <div class="table-cell header-cell"
          [ngStyle]="{ 'width.px': setCellWidth(columnIndex) }"
          (click)="sortData(columnIndex)">
