@@ -15,13 +15,13 @@
           </span>
       </div>
       <input #filterInput
-             *ngIf="columnIndex===(columnForFilter |async)"
+             *ngIf="columnIndex===(columnForFilter$ |async)"
              class="filter-input"
              [ngStyle]="{ 'width.px': setInputWidth(columnIndex, filterInput) }"
              type="text"
              (keyup)="onFilterColumn($event)"
-             (click)="filterInputClick($event, columnIndex)"
-      (blur)="onFilterInputBlur()">
+             (click)="filterInputClick($event)"
+             (blur)="onFilterInputBlur(columnIndex)">
       <div class="separator" *ngIf="columnIndex !== headerLength"></div>
     </div>
   </ng-container>

@@ -1,9 +1,9 @@
-import {Component, Input, OnInit} from "@angular/core";
+import {Component, Input, OnDestroy, OnInit} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {RouterOutlet} from "@angular/router";
 import {ReactiveFormsModule} from "@angular/forms";
 import {TableDataService} from "../../../service/table-service";
-import {Observable} from "rxjs";
+import {Observable, Subject} from "rxjs";
 import {TableProps} from "../../../models/table-models";
 
 
@@ -14,50 +14,55 @@ import {TableProps} from "../../../models/table-models";
   imports: [CommonModule, RouterOutlet, ReactiveFormsModule],
   templateUrl: './table-header.component.html'
 })
-export class TableHeaderComponent implements OnInit {
+export class TableHeaderComponent implements OnInit, OnDestroy {
 
   tableHeader$: Observable<string[]> = this.service.tableHeader$;
-  headerLength$: Observable<number> = this.service.headerLength$;
-  columnInitializer: TableProps = {columns: []};
-  columnForFilter: Observable<number> = this.service.columnToFilter$;
+  columnForFilter$: Observable<number> = this.service.columnToFilter$;
   @Input()
   currentSort: { column: string, direction: 'asc' | 'desc' | undefined } = {column: '', direction: 'asc'};
-
   headerLength: number = -1;
+  private _headerLength$: Observable<number> = this.service.headerLength$;
+  private _columnInitializer: TableProps = {columns: []};
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   constructor(private service: TableDataService) {
-    this.tableHeader$ = service.tableHeader$
-
   }
 
   setCellWidth(columnIndex: number): number | undefined {
-    return this.columnInitializer.columns[columnIndex].width;
+    return this._columnInitializer.columns[columnIndex].width;
   }
 
   ngOnInit(): void {
     this.service.columnInitializer.subscribe((columnInitializer: TableProps) => {
-      this.columnInitializer = columnInitializer;
-    })
-    this.headerLength$.subscribe((headerLength: number) => this.headerLength = headerLength);
+      this._columnInitializer = columnInitializer;
+    });
+
+    this._headerLength$.subscribe((headerLength: number) => this.headerLength = headerLength);
+  }
+
+  ngOnDestroy(): void {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 
   sortData(columnIndex: number) {
     this.service.setColumnToSort(columnIndex);
   }
 
-  filterInputClick($event: Event, columnIndex: number) {
+  filterInputClick($event: Event) {
     $event!.stopPropagation();
   }
 
   onFilterIconClick(event: Event, columnIndex: number): void {
     event.stopPropagation();
-    // this.service.setFilterValue('');
+    this.service.setColumnToFilter(-1);
     this.service.setColumnToFilter(columnIndex);
+    this.service.setFilterValue('');
   }
 
   setInputWidth(cellIndex: number, input: HTMLElement): number | undefined {
     input.focus();
-    return this.columnInitializer.columns[cellIndex].width;
+    return this._columnInitializer.columns[cellIndex].width;
 
   }
 
@@ -66,7 +71,8 @@ export class TableHeaderComponent implements OnInit {
     this.service.setFilterValue(searchTerm)
   }
 
-  onFilterInputBlur() {
-    this.service.setColumnToFilter(-1);
+  onFilterInputBlur(actualColumn: number) {
+    // this.service.setFilterValue('');
+    //this.service.setColumnToFilter(-1);
   }
 }
