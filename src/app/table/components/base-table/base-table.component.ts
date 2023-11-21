@@ -24,19 +24,8 @@ export class TableComponent implements OnInit, OnDestroy {
   columnInitializer!: TableProps;
   @Input()
   tableData: any;
-  tableHeader: string[] = [];
-  tableRows: any[] = [];
   mappedData: any[] = [];
   currentSort: { column: string, direction: 'asc' | 'desc' | undefined } = {column: '', direction: 'asc'};
-  selectedRow: {
-    rowIndex: number,
-    data: {},
-    style: ""
-  } = {
-    rowIndex: -1,
-    data: {},
-    style: ""
-  };
   columnForFilter: number = -1;
   columnToSort$: Observable<number> = this.service.columnToSort$;
   columnToFilter$: Observable<number> = this.service.columnToFilter$;
@@ -51,7 +40,7 @@ export class TableComponent implements OnInit, OnDestroy {
         map((filterValue: string) => {
           if (filterValue === '' && columnIndex === -1) {
             // it runs when the filter is cleared or toggle between filter inputs
-           // this.service.setTableRowData([...this._cashedTableRows]);
+            return;
           } else {
             let filteredTableRows = this._cashedTableRows.filter((row: any) => {
               return row[columnIndex].toString().toLowerCase().includes(filterValue.toLowerCase());
@@ -72,10 +61,8 @@ export class TableComponent implements OnInit, OnDestroy {
     if (this.tableData && this.tableData.length > 0) {
       this.service.setTableHeader(initTableHeaders(this.columnInitializer));
       this.service.setColumnInitializer(this.columnInitializer);
-      this.service.setTableRowData(createSimpleTable(this.tableData, this.columnInitializer))
-      this.tableHeader = initTableHeaders(this.columnInitializer);
-      this.tableRows = createSimpleTable(this.tableData, this.columnInitializer);
-      this._cashedTableRows = [...this.tableRows];
+      this.service.setTableRowData(createSimpleTable(this.tableData, this.columnInitializer));
+      this._cashedTableRows = [...createSimpleTable(this.tableData, this.columnInitializer)];
       this.mappedData = createMapFromTableData(this.tableData);
 
       this.columnToSort$.subscribe((columnIndex: number) => {
@@ -86,7 +73,7 @@ export class TableComponent implements OnInit, OnDestroy {
       });
       this.filterSubscription$.subscribe();
     } else {
-      this.tableHeader = initTableHeaders(this.columnInitializer);
+      this.service.setTableHeader(initTableHeaders(this.columnInitializer));
     }
   }
 
@@ -97,7 +84,7 @@ export class TableComponent implements OnInit, OnDestroy {
       applySorting(currentColumn, [...this.tableData]) :
       applySortBySortProp(currentColumn, [...this.tableData]);
     this.service.setTableRowData(createSimpleTable(this.tableData, this.columnInitializer));
-    this.tableRows = createSimpleTable(this.tableData, this.columnInitializer);
+    this._cashedTableRows = [...createSimpleTable(this.tableData, this.columnInitializer)];
     this.mappedData = createMapFromTableData([...this.tableData]);
   }
 
