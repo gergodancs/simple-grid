@@ -25,9 +25,18 @@ export class AppComponent {
 
   dummyData2 = [
     {id:1, name: "panka", age: 25, city: "New York", country: "USA"},
-    {id:1, name: "gergo", age: 25, city: "New York", country: "USA"}
+    {id:2, name: "gergo", age: 2, city: "bp", country: "mo"}
   ]
 
+  columnInitializer2: TableProps = {
+    columns: [
+      {field: "id", header: "ID", width: 100},
+      {field: "name", header: "NAME", width: 100},
+      {field: "age", header: "Age", width: 100},
+      {field: "city", header: "City", width: 100},
+      {field: "country", header: "Country", width: 100},
+    ]
+  }
   onRowSelected = (data: any) => console.log(data);
 
   columnInitializer: TableProps = {

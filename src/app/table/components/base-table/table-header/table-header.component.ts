@@ -19,24 +19,21 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
   tableHeader$: Observable<string[]> = this.service.tableHeader$;
   columnForFilter$: Observable<number> = this.service.columnToFilter$;
   @Input()
+  columnInitializer!: TableProps;
+  @Input()
   currentSort: { column: string, direction: 'asc' | 'desc' | undefined } = {column: '', direction: 'asc'};
   headerLength: number = -1;
   private _headerLength$: Observable<number> = this.service.headerLength$;
-  private _columnInitializer: TableProps = {columns: []};
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   constructor(private service: TableDataService) {
   }
 
   setCellWidth(columnIndex: number): number | undefined {
-    return this._columnInitializer.columns[columnIndex].width;
+    return this.columnInitializer.columns[columnIndex].width;
   }
 
   ngOnInit(): void {
-    this.service.columnInitializer.subscribe((columnInitializer: TableProps) => {
-      this._columnInitializer = columnInitializer;
-    });
-
     this._headerLength$.subscribe((headerLength: number) => this.headerLength = headerLength);
   }
 
@@ -62,7 +59,7 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
 
   setInputWidth(cellIndex: number, input: HTMLElement): number | undefined {
     input.focus();
-    return this._columnInitializer.columns[cellIndex].width;
+    return this.columnInitializer.columns[cellIndex].width;
 
   }
 
