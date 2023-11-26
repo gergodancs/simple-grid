@@ -44,3 +44,10 @@ export type ColumnProps = {
    */
   valueSetter?: (data: any) => string | number;
 }
+
+export type SortDirection = 'asc' | 'desc' | undefined;
+
+export type CurrentSort = {
+  column: string;
+  direction: SortDirection;
+}

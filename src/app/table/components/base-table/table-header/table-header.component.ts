@@ -4,13 +4,14 @@ import {RouterOutlet} from "@angular/router";
 import {ReactiveFormsModule} from "@angular/forms";
 import {TableDataService} from "../../../service/table-service";
 import {map, Observable, Subject, switchMap, takeUntil} from "rxjs";
-import {TableProps} from "../../../models/table-models";
+import {CurrentSort, TableProps} from "../../../models/table-models";
 import {initTableHeaders} from "../../../utils/init-utils";
 import {RowDataService} from "../../../service/data-service";
+import {determineSortDirection} from "../../../utils/sorting-utils";
 
 
 @Component({
-  selector: 'table-header',
+  selector: 'd-table-header',
   standalone: true,
   styleUrls: ['./table-header.component.scss', '../base-table.component.scss'],
   imports: [CommonModule, RouterOutlet, ReactiveFormsModule],
@@ -22,38 +23,30 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
   columnToFilter$: Observable<number> = this.service.columnToFilter$;
   @Input()
   columnInitializer!: TableProps;
-  @Input()
-  currentSort: { column: string, direction: 'asc' | 'desc' | undefined } = {column: '', direction: 'asc'};
-  private _filterValue$: Observable<string> = this.service.filterValue$;
-  private _ngUnsubscribe: Subject<void> = new Subject<void>();
 
-  private _filterSubscription$ = this.columnToFilter$.pipe(
-    switchMap((columnIndex) => {
-      return this._filterValue$.pipe(
-        map((filterValue: string) => {
-          this._rowDataService.filterTableRows(columnIndex, filterValue);
-        }),
-        takeUntil(this._ngUnsubscribe),
-      );
-    })
-  );
+  currentSort: CurrentSort = {column: '', direction: 'asc'};
+  private _filterValue$: Observable<string> = this.service.filterValue$;
+  private _columnToSort$: Observable<number> = this.service.columnToSort$;
+  private _ngUnsubscribe: Subject<void> = new Subject<void>();
 
   constructor(private service: TableDataService,
               private _rowDataService: RowDataService) {
   }
 
-  setCellWidth(columnIndex: number): number | undefined {
-    return this.columnInitializer.columns[columnIndex].width;
-  }
 
   ngOnInit(): void {
     this.tableHeader = initTableHeaders(this.columnInitializer);
-    this._filterSubscription$.subscribe();
+    this._filterSubscription().subscribe();
+    this._sortSubscription().subscribe();
   }
 
   ngOnDestroy(): void {
     this._ngUnsubscribe.next();
     this._ngUnsubscribe.complete();
+  }
+
+  setCellWidth(columnIndex: number): number | undefined {
+    return this.columnInitializer.columns[columnIndex].width;
   }
 
   sortData(columnIndex: number) {
@@ -85,5 +78,30 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
   onFilterInputBlur(actualColumn: number) {
     // this.service.setFilterValue('');
     //this.service.setColumnToFilter(-1);
+  }
+
+  private _filterSubscription(): Observable<any> {
+    return this.columnToFilter$.pipe(
+      switchMap((columnIndex) => {
+        return this._filterValue$.pipe(
+          map((filterValue: string) => {
+            this._rowDataService.filterTableRows(columnIndex, filterValue);
+          }),
+          takeUntil(this._ngUnsubscribe),
+        );
+      })
+    );
+  }
+
+  private _sortSubscription(): Observable<any> {
+    return this._columnToSort$.pipe(
+      takeUntil(this._ngUnsubscribe),
+      map((columnIndex) => {
+        if (columnIndex !== -1) {
+          const {currentSort} = determineSortDirection(this.currentSort, this.columnInitializer, columnIndex);
+          this._rowDataService.sortTableRows(columnIndex, currentSort.direction);
+        }
+      }),
+    );
   }
 }

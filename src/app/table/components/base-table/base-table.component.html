@@ -1,8 +1,9 @@
 <div class="table-container">
-  <table-header
-    [currentSort]="currentSort"
+  <d-table-header
     [columnInitializer]="columnInitializer">
-  </table-header>
- <d-table-rows [columnInitializer]="columnInitializer"></d-table-rows>
+  </d-table-header>
+  <d-table-rows
+    [columnInitializer]="columnInitializer">
+  </d-table-rows>
 </div>
 

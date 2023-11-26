@@ -1,6 +1,5 @@
-import {TableProps} from "../models/table-models";
+import {CurrentSort, TableProps} from "../models/table-models";
 
-export type CurrentSort = { column: string, direction: 'asc' | 'desc' | undefined }
 export const determineSortDirection = (currentSort: CurrentSort, tableOptions: TableProps, columnIndex: number): any => {
     const currentColumn = tableOptions.columns[columnIndex];
     if (currentSort.column === currentColumn.header) {

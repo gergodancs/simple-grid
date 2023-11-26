@@ -22,34 +22,22 @@ import {RowDataService} from "../../service/data-service";
 })
 export class TableComponent implements OnInit, OnDestroy {
   mappedData: any[] = [];
-  currentSort: { column: string, direction: 'asc' | 'desc' | undefined } = {column: '', direction: 'asc'};
   @Input()
   columnInitializer!: TableProps;
   @Input()
   tableData: any;
-  private _columnToSort$: Observable<number> = this.service.columnToSort$;
   private _ngUnsubscribe: Subject<void> = new Subject<void>();
-  private _sortSubscription: Subscription | undefined;
 
-  constructor(private service: TableDataService,
-              private _rowDataService: RowDataService) {
+  constructor(private _rowDataService: RowDataService) {
   }
 
   ngOnInit(): void {
     if (this.tableData && this.tableData.length > 0) {
       this._initTable();
-
-      this._sortSubscription = this._columnToSort$.subscribe((columnIndex: number) => {
-        if (columnIndex !== -1) {
-          const {currentSort} = determineSortDirection(this.currentSort, this.columnInitializer, columnIndex);
-          this._rowDataService.sortTableRows(columnIndex, currentSort.direction)
-        }
-      });
     }
   }
 
   ngOnDestroy(): void {
-    this._sortSubscription?.unsubscribe();
     this._ngUnsubscribe.next();
     this._ngUnsubscribe.complete();
   }

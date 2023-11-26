@@ -35,15 +35,7 @@ export class TableBodyComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this._rowDataService.selectedRowData$.pipe(
-      takeUntil(this.ngUnsubscribe),
-      map((selectedRowData: any) => {
-        this.selectedRow.data = selectedRowData;
-        if (this.columnInitializer.onRowSelected) {
-          this.columnInitializer.onRowSelected(this.selectedRow.data);
-        }
-      })
-    ).subscribe();
+    this._onRowSelectedSubscription().subscribe();
   }
 
   ngOnDestroy(): void {
@@ -67,5 +59,17 @@ export class TableBodyComponent implements OnInit, OnDestroy {
     this._rowDataService.setSelectedRowData(rowIndex);
     this._service.setColumnToFilter(-1);
     this.selectedRow.rowIndex = rowIndex;
+  }
+
+  private _onRowSelectedSubscription(): Observable<any> {
+    return this._rowDataService.selectedRowData$.pipe(
+      takeUntil(this.ngUnsubscribe),
+      map((selectedRowData: any) => {
+        this.selectedRow.data = selectedRowData;
+        if (this.columnInitializer.onRowSelected) {
+          this.columnInitializer.onRowSelected(this.selectedRow.data);
+        }
+      }),
+    );
   }
 }
