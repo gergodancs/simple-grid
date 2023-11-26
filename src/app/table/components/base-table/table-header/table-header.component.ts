@@ -3,8 +3,10 @@ import {CommonModule} from "@angular/common";
 import {RouterOutlet} from "@angular/router";
 import {ReactiveFormsModule} from "@angular/forms";
 import {TableDataService} from "../../../service/table-service";
-import {Observable, Subject} from "rxjs";
+import {map, Observable, Subject, switchMap, takeUntil} from "rxjs";
 import {TableProps} from "../../../models/table-models";
+import {initTableHeaders} from "../../../utils/init-utils";
+import {RowDataService} from "../../../service/data-service";
 
 
 @Component({
@@ -16,17 +18,28 @@ import {TableProps} from "../../../models/table-models";
 })
 export class TableHeaderComponent implements OnInit, OnDestroy {
 
-  tableHeader$: Observable<string[]> = this.service.tableHeader$;
-  columnForFilter$: Observable<number> = this.service.columnToFilter$;
+  tableHeader: string[] = [];
+  columnToFilter$: Observable<number> = this.service.columnToFilter$;
   @Input()
   columnInitializer!: TableProps;
   @Input()
   currentSort: { column: string, direction: 'asc' | 'desc' | undefined } = {column: '', direction: 'asc'};
-  headerLength: number = -1;
-  private _headerLength$: Observable<number> = this.service.headerLength$;
-  private ngUnsubscribe: Subject<void> = new Subject<void>();
+  private _filterValue$: Observable<string> = this.service.filterValue$;
+  private _ngUnsubscribe: Subject<void> = new Subject<void>();
 
-  constructor(private service: TableDataService) {
+  private _filterSubscription$ = this.columnToFilter$.pipe(
+    switchMap((columnIndex) => {
+      return this._filterValue$.pipe(
+        map((filterValue: string) => {
+          this._rowDataService.filterTableRows(columnIndex, filterValue);
+        }),
+        takeUntil(this._ngUnsubscribe),
+      );
+    })
+  );
+
+  constructor(private service: TableDataService,
+              private _rowDataService: RowDataService) {
   }
 
   setCellWidth(columnIndex: number): number | undefined {
@@ -34,12 +47,13 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this._headerLength$.subscribe((headerLength: number) => this.headerLength = headerLength);
+    this.tableHeader = initTableHeaders(this.columnInitializer);
+    this._filterSubscription$.subscribe();
   }
 
   ngOnDestroy(): void {
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
+    this._ngUnsubscribe.next();
+    this._ngUnsubscribe.complete();
   }
 
   sortData(columnIndex: number) {
