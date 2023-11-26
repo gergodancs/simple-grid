@@ -1,16 +1,8 @@
 <div class="table-container">
-  <table-header [currentSort]="currentSort"></table-header>
-
-  <div *ngIf="tableRows.length>0" class="table-body">
-
-    <div *ngFor="let row of tableRows; index as rowIndex" class="table-row {{setRowStyle(rowIndex)}}">
-      <div *ngFor="let cell of row; index as cellIndex;"
-           class="table-cell"
-           (click)="setSelectedRow(rowIndex)"
-           [ngStyle]="{ 'width.px': setCellWidth( cellIndex) }">
-        {{ cell }}
-      </div>
-    </div>
-  </div>
+  <table-header
+    [currentSort]="currentSort"
+    [columnInitializer]="columnInitializer">
+  </table-header>
+ <d-table-rows [columnInitializer]="columnInitializer"></d-table-rows>
 </div>
 

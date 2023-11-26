@@ -1,10 +1,12 @@
-import {Component, Input, OnInit} from "@angular/core";
+import {Component, Input, OnDestroy, OnInit} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {RouterOutlet} from "@angular/router";
 import {ReactiveFormsModule} from "@angular/forms";
 import {TableDataService} from "../../../service/table-service";
-import {Observable} from "rxjs";
+import {map, Observable, Subject, switchMap, takeUntil} from "rxjs";
 import {TableProps} from "../../../models/table-models";
+import {initTableHeaders} from "../../../utils/init-utils";
+import {RowDataService} from "../../../service/data-service";
 
 
 @Component({
@@ -14,20 +16,30 @@ import {TableProps} from "../../../models/table-models";
   imports: [CommonModule, RouterOutlet, ReactiveFormsModule],
   templateUrl: './table-header.component.html'
 })
-export class TableHeaderComponent implements OnInit {
+export class TableHeaderComponent implements OnInit, OnDestroy {
 
-  tableHeader: Observable<string[]> = this.service.tableHeader$;
-  headerLength$: Observable<number> = this.service.headerLength$;
-  columnInitializer: TableProps = {columns: []};
-  columnForFilter: Observable<number> = this.service.columnToFilter$;
+  tableHeader: string[] = [];
+  columnToFilter$: Observable<number> = this.service.columnToFilter$;
+  @Input()
+  columnInitializer!: TableProps;
   @Input()
   currentSort: { column: string, direction: 'asc' | 'desc' | undefined } = {column: '', direction: 'asc'};
+  private _filterValue$: Observable<string> = this.service.filterValue$;
+  private _ngUnsubscribe: Subject<void> = new Subject<void>();
 
-  headerLength: number = -1;
+  private _filterSubscription$ = this.columnToFilter$.pipe(
+    switchMap((columnIndex) => {
+      return this._filterValue$.pipe(
+        map((filterValue: string) => {
+          this._rowDataService.filterTableRows(columnIndex, filterValue);
+        }),
+        takeUntil(this._ngUnsubscribe),
+      );
+    })
+  );
 
-  constructor(private service: TableDataService) {
-    this.tableHeader = service.tableHeader$
-
+  constructor(private service: TableDataService,
+              private _rowDataService: RowDataService) {
   }
 
   setCellWidth(columnIndex: number): number | undefined {
@@ -35,24 +47,28 @@ export class TableHeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.service.columnInitializer.subscribe((columnInitializer: TableProps) => {
-      this.columnInitializer = columnInitializer;
-    })
-    this.headerLength$.subscribe((headerLength: number) => this.headerLength = headerLength);
+    this.tableHeader = initTableHeaders(this.columnInitializer);
+    this._filterSubscription$.subscribe();
+  }
+
+  ngOnDestroy(): void {
+    this._ngUnsubscribe.next();
+    this._ngUnsubscribe.complete();
   }
 
   sortData(columnIndex: number) {
     this.service.setColumnToSort(columnIndex);
   }
 
-  filterInputClick($event: Event, columnIndex: number) {
+  filterInputClick($event: Event) {
     $event!.stopPropagation();
   }
 
   onFilterIconClick(event: Event, columnIndex: number): void {
     event.stopPropagation();
-    // this.service.setFilterValue('');
+    this.service.setColumnToFilter(-1);
     this.service.setColumnToFilter(columnIndex);
+    this.service.setFilterValue('');
   }
 
   setInputWidth(cellIndex: number, input: HTMLElement): number | undefined {
@@ -66,7 +82,8 @@ export class TableHeaderComponent implements OnInit {
     this.service.setFilterValue(searchTerm)
   }
 
-  onFilterInputBlur() {
-    this.service.setColumnToFilter(-1);
+  onFilterInputBlur(actualColumn: number) {
+    // this.service.setFilterValue('');
+    //this.service.setColumnToFilter(-1);
   }
 }

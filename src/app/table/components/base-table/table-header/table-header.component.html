@@ -1,5 +1,5 @@
 <div class="table-header">
-  <ng-container *ngFor="let headerCell of tableHeader | async; index as columnIndex">
+  <ng-container *ngFor="let headerCell of tableHeader; index as columnIndex">
     <div class="table-cell header-cell"
          [ngStyle]="{ 'width.px': setCellWidth(columnIndex) }"
          (click)="sortData(columnIndex)">
@@ -15,14 +15,14 @@
           </span>
       </div>
       <input #filterInput
-             *ngIf="columnIndex===(columnForFilter |async)"
+             *ngIf="columnIndex===(columnToFilter$ |async)"
              class="filter-input"
              [ngStyle]="{ 'width.px': setInputWidth(columnIndex, filterInput) }"
              type="text"
              (keyup)="onFilterColumn($event)"
-             (click)="filterInputClick($event, columnIndex)"
-      (blur)="onFilterInputBlur()">
-      <div class="separator" *ngIf="columnIndex !== headerLength"></div>
+             (click)="filterInputClick($event)"
+             (blur)="onFilterInputBlur(columnIndex)">
+      <div class="separator" *ngIf="columnIndex !== tableHeader.length-1"></div>
     </div>
   </ng-container>
 </div>
