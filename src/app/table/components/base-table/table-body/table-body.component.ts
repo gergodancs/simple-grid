@@ -61,7 +61,6 @@ export class TableBodyComponent implements OnInit, OnDestroy {
     return this._rowDataService.selectedRowData$.pipe(
       takeUntil(this.ngUnsubscribe),
       map((selectedRowData: any) => {
-
         this.selectedRow!.data = selectedRowData;
         if (this.columnInitializer.onRowSelected) {
           this.columnInitializer.onRowSelected(this.selectedRow!.data);
