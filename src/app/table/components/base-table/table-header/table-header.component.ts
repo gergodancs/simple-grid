@@ -19,12 +19,11 @@ import {determineSortDirection} from "../../../utils/sorting-utils";
 })
 export class TableHeaderComponent implements OnInit, OnDestroy {
 
-  tableHeader: string[] = [];
-  columnToFilter$: Observable<number> = this.service.columnToFilter$;
   @Input()
   columnInitializer!: TableProps;
-
+  tableHeader: string[] = [];
   currentSort: CurrentSort = {column: '', direction: 'asc'};
+  columnToFilter$: Observable<number> = this.service.columnToFilter$;
   private _filterValue$: Observable<string> = this.service.filterValue$;
   private _columnToSort$: Observable<number> = this.service.columnToSort$;
   private _ngUnsubscribe: Subject<void> = new Subject<void>();

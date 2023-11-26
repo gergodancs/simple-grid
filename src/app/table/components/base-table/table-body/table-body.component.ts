@@ -2,7 +2,7 @@ import {Component, Input, OnDestroy, OnInit} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {RouterOutlet} from "@angular/router";
 import {ReactiveFormsModule} from "@angular/forms";
-import {TableProps} from "../../../models/table-models";
+import {SelectedRow, TableProps} from "../../../models/table-models";
 import {TableDataService} from "../../../service/table-service";
 import {map, Observable, Subject, takeUntil} from "rxjs";
 import {RowDataService} from "../../../service/data-service";
@@ -19,11 +19,7 @@ export class TableBodyComponent implements OnInit, OnDestroy {
   columnInitializer!: TableProps;
   tableRows$: Observable<any> = this._rowDataService.tableRowData$;
   hasData$: Observable<boolean> = this._rowDataService.hasData$;
-  selectedRow: {
-    rowIndex: number,
-    data: {},
-    style: ""
-  } = {
+  selectedRow: SelectedRow ={
     rowIndex: -1,
     data: {},
     style: ""
@@ -48,7 +44,7 @@ export class TableBodyComponent implements OnInit, OnDestroy {
   }
 
   setSelectedRowStyle(rowIndex: number): string {
-    if (this.selectedRow.rowIndex === rowIndex) {
+    if (this.selectedRow!.rowIndex === rowIndex) {
       return "selected-row";
     } else {
       return "";
@@ -58,16 +54,17 @@ export class TableBodyComponent implements OnInit, OnDestroy {
   setSelectedRow(rowIndex: number): void {
     this._rowDataService.setSelectedRowData(rowIndex);
     this._service.setColumnToFilter(-1);
-    this.selectedRow.rowIndex = rowIndex;
+    this.selectedRow!.rowIndex = rowIndex;
   }
 
   private _onRowSelectedSubscription(): Observable<any> {
     return this._rowDataService.selectedRowData$.pipe(
       takeUntil(this.ngUnsubscribe),
       map((selectedRowData: any) => {
-        this.selectedRow.data = selectedRowData;
+
+        this.selectedRow!.data = selectedRowData;
         if (this.columnInitializer.onRowSelected) {
-          this.columnInitializer.onRowSelected(this.selectedRow.data);
+          this.columnInitializer.onRowSelected(this.selectedRow!.data);
         }
       }),
     );

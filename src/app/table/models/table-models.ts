@@ -51,3 +51,8 @@ export type CurrentSort = {
   column: string;
   direction: SortDirection;
 }
+ export type SelectedRow = {
+   rowIndex: number,
+   data: {},
+   style: string
+ }
