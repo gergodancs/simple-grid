@@ -90,33 +90,6 @@ i:hover {
   text-align: center;
 }
 
-.filter-form {
-  position: absolute;
-  top: 25px;
-  display: flex;
-  flex-direction: column;
-  gap:3px;
-
-}
-
-.filter-input {
-
-  padding: 2px;
-  top: 25px;
-  width: 50px;
-  border: 1px solid lightgray;
-  border-radius: 3px;
-  background-color: rgba(237, 242, 248, 0.73);
-  outline: none;
-}
-
-.start-with {
-  top: 50px
-}
-
-.ends-with {
-  top: 75px;
-}
 
 
 
