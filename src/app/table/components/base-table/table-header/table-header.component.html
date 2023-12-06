@@ -1,28 +1,57 @@
 <div class="table-header">
   <ng-container *ngFor="let headerCell of tableHeader; index as columnIndex">
-    <div class="table-cell header-cell"
-         [ngStyle]="{ 'width.px': setCellWidth(columnIndex) }"
-         (click)="sortData(columnIndex)">
+    <form class="table-cell header-cell"
+          [ngStyle]="{ 'width.px': setCellWidth(columnIndex) }">
       <span class="header-text">{{ headerCell }}</span>
       <div class="header-icon-container">
-          <span *ngIf="currentSort.column === headerCell" class="sort-icon">
-            <i class="fas fa-sm"
-               [ngClass]="currentSort.direction === 'asc' ? 'fa-chevron-up' : currentSort.direction === 'desc'?'fa-chevron-down':''">
-            </i>
+          <span class="sort-icon"
+                (click)="sortData(columnIndex)">
+            <i class="fas fa-sm fa-solid fa-sort"></i>
           </span>
         <span (click)="onFilterIconClick($event, columnIndex)">
             <i class="fas fa-filter fa-sm filter-icon"></i>
           </span>
       </div>
-      <input #filterInput
-             *ngIf="columnIndex===(columnToFilter$ |async)"
-             class="filter-input"
-             [ngStyle]="{ 'width.px': setInputWidth(columnIndex, filterInput) }"
-             type="text"
-             (keyup)="onFilterColumn($event)"
-             (click)="filterInputClick($event)"
-             (blur)="onFilterInputBlur(columnIndex)">
+      <form class="filter-form" *ngIf="columnIndex===(columnToFilter$ |async)">
+        <input #filterInput
+               [formControl]="containsFormControl"
+               placeholder="Contains..."
+               class="filter-input"
+               type="text"
+               [ngStyle]="{ 'width.px': setInputWidth(columnIndex, filterInput) }"
+               (keyup)="onFilterColumn($event,FilterType.Contains)"
+               (blur)="onFilterInputBlur(columnIndex)"
+               tabindex="1">
+
+        <input #filterInput1
+               placeholder="Starts with..."
+               class="filter-input start-with"
+               type="text"
+               (keyup)="onFilterColumn($event,FilterType.StartWith)"
+               [formControl]="startWithFormControl"
+               [ngStyle]="{ 'width.px': setInputWidth(columnIndex, filterInput1) }"
+               tabindex="2">
+        <input #filterInput2
+               placeholder="Ends with..."
+               class="filter-input ends-with"
+               type="text"
+               [formControl]="endWithFormControl"
+               (keyup)="onFilterColumn($event,FilterType.EndWith)"
+               [ngStyle]="{ 'width.px': setInputWidth(columnIndex, filterInput2) }"
+               tabindex="3">
+
+        <input #filterInput3
+               placeholder="Not contains..."
+               class="filter-input ends-with"
+               type="text"
+               (keyup)="onFilterColumn($event,FilterType.NotContains)"
+               [ngStyle]="{ 'width.px': setInputWidth(columnIndex, filterInput3) }"
+               tabindex="3">
+
+      </form>
+
+
       <div class="separator" *ngIf="columnIndex !== tableHeader.length-1"></div>
-    </div>
+    </form>
   </ng-container>
 </div>

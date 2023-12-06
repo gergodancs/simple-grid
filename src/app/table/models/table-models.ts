@@ -56,3 +56,10 @@ export type CurrentSort = {
    data: {},
    style: string
  }
+
+export enum FilterType {
+  Contains = 'contains',
+  StartWith = 'startWith',
+  EndWith = 'endWith',
+  NotContains = 'notContains',
+}

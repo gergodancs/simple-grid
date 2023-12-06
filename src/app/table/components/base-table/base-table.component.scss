@@ -36,19 +36,19 @@
   position: relative;
 }
 
-i:hover{
+i:hover {
   cursor: pointer;
 }
 
-.header-text:hover{
+.header-text:hover {
   cursor: pointer;
 }
 
 
-.header-icon-container{
-  margin-left: 3px;
+.header-icon-container {
+  margin-left: 5px;
   display: flex;
-  gap: 3px;
+  gap: 4px;
 }
 
 .header-cell::after {
@@ -90,15 +90,32 @@ i:hover{
   text-align: center;
 }
 
-.filter-input{
+.filter-form {
   position: absolute;
+  top: 25px;
+  display: flex;
+  flex-direction: column;
+  gap:3px;
+
+}
+
+.filter-input {
+
   padding: 2px;
   top: 25px;
   width: 50px;
   border: 1px solid lightgray;
   border-radius: 3px;
   background-color: rgba(237, 242, 248, 0.73);
-outline:none;
+  outline: none;
+}
+
+.start-with {
+  top: 50px
+}
+
+.ends-with {
+  top: 75px;
 }
 
 

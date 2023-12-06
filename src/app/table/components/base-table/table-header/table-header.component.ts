@@ -1,10 +1,10 @@
 import {Component, Input, OnDestroy, OnInit} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {RouterOutlet} from "@angular/router";
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormControl, ReactiveFormsModule} from "@angular/forms";
 import {TableDataService} from "../../../service/table-service";
 import {map, Observable, Subject, switchMap, takeUntil} from "rxjs";
-import {CurrentSort, TableProps} from "../../../models/table-models";
+import {CurrentSort, FilterType, TableProps} from "../../../models/table-models";
 import {initTableHeaders} from "../../../utils/init-utils";
 import {RowDataService} from "../../../service/data-service";
 import {determineSortDirection} from "../../../utils/sorting-utils";
@@ -24,6 +24,10 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
   tableHeader: string[] = [];
   currentSort: CurrentSort = {column: '', direction: 'asc'};
   columnToFilter$: Observable<number> = this.service.columnToFilter$;
+  containsFormControl: FormControl<string | null> = new FormControl('');
+  startWithFormControl: FormControl<string | null> = new FormControl('');
+  endWithFormControl: FormControl<string | null> = new FormControl('');
+  filterType: FilterType = FilterType.Contains;
   private _filterValue$: Observable<string> = this.service.filterValue$;
   private _columnToSort$: Observable<number> = this.service.columnToSort$;
   private _ngUnsubscribe: Subject<void> = new Subject<void>();
@@ -64,12 +68,13 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
   }
 
   setInputWidth(cellIndex: number, input: HTMLElement): number | undefined {
-    input.focus();
+
     return this.columnInitializer.columns[cellIndex].width;
 
   }
 
-  onFilterColumn($event: KeyboardEvent) {
+  onFilterColumn($event: KeyboardEvent, filterType: FilterType) {
+    this.filterType = filterType;
     let searchTerm = ($event.target as HTMLInputElement).value;
     this.service.setFilterValue(searchTerm)
   }
@@ -84,7 +89,7 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
       switchMap((columnIndex) => {
         return this._filterValue$.pipe(
           map((filterValue: string) => {
-            this._rowDataService.filterTableRows(columnIndex, filterValue);
+            this._rowDataService.filterTableRows(columnIndex, filterValue, this.filterType);
           }),
           takeUntil(this._ngUnsubscribe),
         );
@@ -103,4 +108,6 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
       }),
     );
   }
+
+  protected readonly FilterType = FilterType;
 }
