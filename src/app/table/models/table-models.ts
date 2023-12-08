@@ -35,7 +35,6 @@ export type ColumnProps = {
   width?: number;
   sortable?: boolean;
   sortDirection?: 'asc' | 'desc';
-  sortBy?: string;
 
   /**
    * A function that transforms the raw data before displaying it in the table.
@@ -44,15 +43,3 @@ export type ColumnProps = {
    */
   valueSetter?: (data: any) => string | number;
 }
-
-export type SortDirection = 'asc' | 'desc' | undefined;
-
-export type CurrentSort = {
-  column: string;
-  direction: SortDirection;
-}
- export type SelectedRow = {
-   rowIndex: number,
-   data: {},
-   style: string
- }

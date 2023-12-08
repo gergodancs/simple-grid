@@ -29,6 +29,7 @@ export const createSimpleTable = <TData>(
     }
     displayData.push(tableRow);
   });
+
   return displayData;
 };
 
@@ -42,6 +43,3 @@ export const initTableHeaders = (tableOptions: TableProps): string[] => {
 export const capitalizeFirstLetter = (str: string): string => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
-
-
-
