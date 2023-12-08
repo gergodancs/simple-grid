@@ -1,0 +1,22 @@
+<div class="table-header">
+  <ng-container *ngFor="let headerCell of tableHeader; index as columnIndex">
+    <form class="table-cell header-cell"
+          [ngStyle]="{ 'width.px': setCellWidth(columnIndex) }">
+      <span class="header-text">{{ headerCell }}</span>
+      <div class="header-icon-container">
+          <span class="sort-icon"
+                (click)="sortData(columnIndex)">
+            <i class="fas fa-sm fa-solid fa-sort"></i>
+          </span>
+        <span (click)="onFilterIconClick($event, columnIndex)">
+            <i class="fas fa-filter fa-sm filter-icon"></i>
+          </span>
+      </div>
+      <d-filter-input
+        [columnInitializer]="columnInitializer"
+        [columnIndex]="columnIndex">
+      </d-filter-input>
+      <div class="separator" *ngIf="columnIndex !== tableHeader.length-1"></div>
+    </form>
+  </ng-container>
+</div>

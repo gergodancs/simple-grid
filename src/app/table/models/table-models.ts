@@ -35,6 +35,7 @@ export type ColumnProps = {
   width?: number;
   sortable?: boolean;
   sortDirection?: 'asc' | 'desc';
+  sortBy?: string;
 
   /**
    * A function that transforms the raw data before displaying it in the table.
@@ -42,4 +43,23 @@ export type ColumnProps = {
    * @returns The transformed string or number value to display in the table.
    */
   valueSetter?: (data: any) => string | number;
+}
+
+export type SortDirection = 'asc' | 'desc' | undefined;
+
+export type CurrentSort = {
+  column: string;
+  direction: SortDirection;
+}
+ export type SelectedRow = {
+   rowIndex: number,
+   data: {},
+   style: string
+ }
+
+export enum FilterType {
+  Contains = 'contains',
+  StartWith = 'startWith',
+  EndWith = 'endWith',
+  NotContains = 'notContains',
 }
