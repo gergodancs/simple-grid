@@ -9,13 +9,14 @@ import {initTableHeaders} from "../../../utils/init-utils";
 import {RowDataService} from "../../../service/data-service";
 import {determineSortDirection} from "../../../utils/sorting-utils";
 import {FilterInputComponent} from "./filter/filter.component";
+import {CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
 
 
 @Component({
   selector: 'd-table-header',
   standalone: true,
   styleUrls: ['./table-header.component.scss', '../base-table.component.scss'],
-  imports: [CommonModule, RouterOutlet, ReactiveFormsModule, FilterInputComponent],
+  imports: [CommonModule, RouterOutlet, ReactiveFormsModule, FilterInputComponent, DragDropModule],
   templateUrl: './table-header.component.html'
 })
 export class TableHeaderComponent implements OnInit, OnDestroy {
@@ -68,5 +69,4 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
       }),
     );
   }
-
 }
