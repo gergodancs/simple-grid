@@ -80,7 +80,6 @@ export class RowDataService {
       default:
         return;
     }
-
     this.setTableRowData(filteredTableRows);
   }
 }

@@ -1,6 +1,14 @@
-<div *ngIf="hasData$ | async" class="table-body">
-  <div *ngFor="let row of tableRows$ | async; index as rowIndex" class="table-row {{setSelectedRowStyle(rowIndex)}}">
-    <div *ngFor="let cell of row; index as cellIndex;"
+<div *ngIf="hasData$ | async" class="table-body"
+     cdkDropList
+     [cdkDropListData]="tableRows$ | async"
+     (cdkDropListDropped)="drop($event)">
+  <div *ngFor="let row of tableRows$ | async; index as rowIndex"
+       class="table-row {{setSelectedRowStyle(rowIndex)}}"
+       cdkDrag>
+    <div class="drag-handle" cdkDragHandle>
+      <i class="fas fa-arrows-alt"></i>
+    </div>
+    <div *ngFor="let cell of row; index as cellIndex"
          class="table-cell"
          (click)="setSelectedRow(rowIndex)"
          [ngStyle]="{ 'width.px': setCellWidth( cellIndex) }">

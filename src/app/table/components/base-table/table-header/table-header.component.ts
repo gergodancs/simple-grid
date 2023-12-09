@@ -9,7 +9,7 @@ import {initTableHeaders} from "../../../utils/init-utils";
 import {RowDataService} from "../../../service/data-service";
 import {determineSortDirection} from "../../../utils/sorting-utils";
 import {FilterInputComponent} from "./filter/filter.component";
-import {CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
+import {DragDropModule} from "@angular/cdk/drag-drop";
 
 
 @Component({
@@ -44,7 +44,11 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
   }
 
   setCellWidth(columnIndex: number): number | undefined {
-    return this.columnInitializer.columns[columnIndex].width;
+    let width = this.columnInitializer.columns[columnIndex].width;
+    if (width !== undefined && columnIndex === 0) {
+      return width + 16;
+    }
+    return width;
   }
 
   sortData(columnIndex: number) {

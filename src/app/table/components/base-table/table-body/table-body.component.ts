@@ -6,12 +6,13 @@ import {SelectedRow, TableProps} from "../../../models/table-models";
 import {TableDataService} from "../../../service/table-service";
 import {map, Observable, Subject, takeUntil} from "rxjs";
 import {RowDataService} from "../../../service/data-service";
+import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
 
 @Component({
   selector: 'd-table-rows',
   styleUrls: ['./table-body.component.scss', '../base-table.component.scss'],
   templateUrl: 'table-body.component.html',
-  imports: [CommonModule, RouterOutlet, ReactiveFormsModule],
+  imports: [CommonModule, RouterOutlet, ReactiveFormsModule, CdkDropList, CdkDrag],
   standalone: true,
 })
 export class TableBodyComponent implements OnInit, OnDestroy {
@@ -19,7 +20,7 @@ export class TableBodyComponent implements OnInit, OnDestroy {
   columnInitializer!: TableProps;
   tableRows$: Observable<any> = this._rowDataService.tableRowData$;
   hasData$: Observable<boolean> = this._rowDataService.hasData$;
-  selectedRow: SelectedRow ={
+  selectedRow: SelectedRow = {
     rowIndex: -1,
     data: {},
     style: ""
@@ -55,6 +56,20 @@ export class TableBodyComponent implements OnInit, OnDestroy {
     this._rowDataService.setSelectedRowData(rowIndex);
     this._service.setColumnToFilter(-1);
     this.selectedRow!.rowIndex = rowIndex;
+  }
+
+  drop(event: CdkDragDrop<string[]>) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      this._rowDataService.setTableRowData(event.container.data)
+    } else {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex,
+      );
+    }
   }
 
   private _onRowSelectedSubscription(): Observable<any> {
