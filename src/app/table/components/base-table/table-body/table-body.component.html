@@ -7,7 +7,7 @@
        cdkDragLockAxis="y"
        cdkDragBoundary=".table-body"
        cdkDrag>
-    <div class="drag-handle" cdkDragHandle>
+    <div *ngIf="columnInitializer.movable" class="drag-handle" cdkDragHandle>
       <i class="fas fa-arrows-alt-v"></i>
     </div>
     <div *ngFor="let cell of row; index as cellIndex"

@@ -9,6 +9,10 @@ export interface TableProps {
    */
   onRowSelected?: (data: any) => void;
   /**
+   * Set it true to let user sort rows by drag and drop
+   */
+  movable?: boolean;
+  /**
    * The list of column initializer.
    * Each column initializer is an object with the following properties:
    * - `field` - The name of the column.
@@ -16,6 +20,7 @@ export interface TableProps {
    * - `width` - The width of the column in pixels.
    * - `valueSetter` - A callback function that receives the data of the selected row.
    */
+
   columns: ColumnProps[];
 
 }
@@ -36,6 +41,7 @@ export type ColumnProps = {
   sortable?: boolean;
   sortDirection?: 'asc' | 'desc';
   sortBy?: string;
+
 
   /**
    * A function that transforms the raw data before displaying it in the table.
