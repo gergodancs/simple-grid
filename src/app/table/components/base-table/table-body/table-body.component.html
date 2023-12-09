@@ -4,9 +4,11 @@
      (cdkDropListDropped)="drop($event)">
   <div *ngFor="let row of tableRows$ | async; index as rowIndex"
        class="table-row {{setSelectedRowStyle(rowIndex)}}"
+       cdkDragLockAxis="y"
+       cdkDragBoundary=".table-body"
        cdkDrag>
     <div class="drag-handle" cdkDragHandle>
-      <i class="fas fa-arrows-alt"></i>
+      <i class="fas fa-arrows-alt-v"></i>
     </div>
     <div *ngFor="let cell of row; index as cellIndex"
          class="table-cell"
