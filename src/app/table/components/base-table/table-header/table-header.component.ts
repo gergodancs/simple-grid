@@ -25,12 +25,12 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
   columnInitializer!: TableProps;
   tableHeader: string[] = [];
   currentSort: CurrentSort = {column: '', direction: 'asc'};
-  private _columnToSort$: Observable<number> = this.service.columnToSort$;
+  private _columnToSort$: Observable<number> = this._service.columnToSort$;
   private _ngUnsubscribe: Subject<void> = new Subject<void>();
   private startX = 0;
   private columnIndexResizing = -1;
 
-  constructor(private service: TableDataService,
+  constructor(private _service: TableDataService,
               private _rowDataService: RowDataService) {
   }
 
@@ -48,8 +48,6 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
   onSeparatorMouseDown(event: MouseEvent, columnIndex: number) {
     this.startX = event.clientX;
     this.columnIndexResizing = columnIndex;
-
-    console.log("clicked")
   }
 
   @HostListener('document:mousemove', ['$event'])
@@ -57,11 +55,10 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
     if (this.columnIndexResizing >= 0) {
       const movementX = event.clientX - this.startX;
       this.startX = event.clientX;
-      this.columnInitializer.columns[this.columnIndexResizing].width = this.columnInitializer.columns[this.columnIndexResizing].width! + movementX
-
-
+      this.columnInitializer.columns[this.columnIndexResizing].width = this.columnInitializer.columns[this.columnIndexResizing].width! + movementX;
     }
   }
+
   @HostListener('document:mouseup')
   onMouseUp() {
     this.columnIndexResizing = -1;
@@ -76,14 +73,14 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
   }
 
   sortData(columnIndex: number) {
-    this.service.setColumnToSort(columnIndex);
+    this._service.setColumnToSort(columnIndex);
   }
 
   onFilterIconClick(event: Event, columnIndex: number): void {
     event.stopPropagation();
-    this.service.setColumnToFilter(-1);
-    this.service.setColumnToFilter(columnIndex);
-    this.service.setFilterValue('');
+    this._service.setColumnToFilter(-1);
+    this._service.setColumnToFilter(columnIndex);
+    this._service.setFilterValue('');
   }
 
   private _sortSubscription(): Observable<any> {
