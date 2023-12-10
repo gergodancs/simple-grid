@@ -23,13 +23,13 @@ export class FilterInputComponent implements OnInit, OnDestroy {
   columnInitializer!: TableProps;
 
 
-  columnToFilter$: Observable<number> = this.service.columnToFilter$;
+  columnToFilter$: Observable<number> = this._service.columnToFilter$;
   filterType: FilterType = FilterType.Contains;
   protected readonly FilterType = FilterType;
-  private _filterValue$: Observable<string> = this.service.filterValue$;
+  private _filterValue$: Observable<string> = this._service.filterValue$;
   private _ngUnsubscribe: Subject<void> = new Subject<void>();
 
-  constructor(private service: TableDataService,
+  constructor(private _service: TableDataService,
               private _rowDataService: RowDataService) {
   }
 
@@ -44,7 +44,8 @@ export class FilterInputComponent implements OnInit, OnDestroy {
   onFilterColumn($event: any, filterType: FilterType) {
     this.filterType = filterType;
     let searchTerm = ($event.target as HTMLInputElement).value;
-    this.service.setFilterValue(searchTerm)
+    this._rowDataService.setFilterType(filterType);
+    this._service.setFilterValue(searchTerm)
   }
 
   ngOnDestroy(): void {
@@ -57,7 +58,7 @@ export class FilterInputComponent implements OnInit, OnDestroy {
       switchMap((columnIndex) => {
         return this._filterValue$.pipe(
           map((filterValue: string) => {
-            this._rowDataService.filterTableRows(columnIndex, filterValue, this.filterType);
+            this._rowDataService.filterTableRows(columnIndex, filterValue);
           }),
           takeUntil(this._ngUnsubscribe),
         );
