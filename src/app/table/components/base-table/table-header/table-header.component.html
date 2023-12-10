@@ -16,7 +16,9 @@
         [columnInitializer]="columnInitializer"
         [columnIndex]="columnIndex">
       </d-filter-input>
-      <div class="separator" *ngIf="columnIndex !== tableHeader.length-1"></div>
+      <div class="separator" *ngIf="columnIndex !== tableHeader.length-1" (mousedown)="onSeparatorMouseDown($event,columnIndex)">
+        <div class="separator-line"></div>
+      </div>
     </form>
   </ng-container>
 </div>

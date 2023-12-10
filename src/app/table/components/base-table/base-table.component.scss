@@ -65,10 +65,19 @@ i:hover {
 .separator {
   position: absolute;
   height: 70%;
-  width: 1px;
-  background-color: lightgray;
+
+  padding-left: 3px;
   right: 0;
   top: 15%;
+  z-index: 100;
+}
+.separator:hover{
+  cursor: col-resize;
+}
+.separator-line{
+  width: 1px;
+  background-color: lightgray;
+
 }
 
 .header-cell {
