@@ -24,8 +24,8 @@ export class AppComponent {
   ];
 
   dummyData2 = [
-    {id: 1, name: "panka", age: 25, city: "New York", country: "USA"},
-    {id: 2, name: "gergo", age: 2, city: "bp", country: "mo"}
+    {id:1, name: "panka", age: 25, city: "New York", country: "USA"},
+    {id:2, name: "gergo", age: 2, city: "bp", country: "mo"}
   ]
 
   columnInitializer2: TableProps = {
@@ -41,7 +41,6 @@ export class AppComponent {
 
   columnInitializer: TableProps = {
     onRowSelected: this.onRowSelected,
-    movable: true,
     columns: [
       {
         field: 'id',
@@ -53,16 +52,20 @@ export class AppComponent {
         header: 'name',
         width: 100,
         sortBy: 'firstName',
+        sortable:true,
         valueSetter: (data: any) => data.firstName
       },
       {
         field: 'age',
         header: 'age',
         width: 50,
+        sortable:true,
+        sortDirection: 'asc'
       },
       {
         field: 'city',
         header: 'city',
+        sortable:true,
         width: 150
       },
       {

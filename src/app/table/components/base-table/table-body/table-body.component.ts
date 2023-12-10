@@ -6,13 +6,20 @@ import {SelectedRow, TableProps} from "../../../models/table-models";
 import {TableDataService} from "../../../service/table-service";
 import {map, Observable, Subject, takeUntil} from "rxjs";
 import {RowDataService} from "../../../service/data-service";
-import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
+import {
+  CdkDrag,
+  CdkDragDrop,
+  CdkDragHandle,
+  CdkDropList,
+  moveItemInArray,
+  transferArrayItem
+} from "@angular/cdk/drag-drop";
 
 @Component({
   selector: 'd-table-rows',
   styleUrls: ['./table-body.component.scss', '../base-table.component.scss'],
   templateUrl: 'table-body.component.html',
-  imports: [CommonModule, RouterOutlet, ReactiveFormsModule, CdkDropList, CdkDrag],
+  imports: [CommonModule, RouterOutlet, ReactiveFormsModule, CdkDropList, CdkDrag, CdkDragHandle],
   standalone: true,
 })
 export class TableBodyComponent implements OnInit, OnDestroy {

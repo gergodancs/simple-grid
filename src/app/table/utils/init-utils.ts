@@ -1,4 +1,5 @@
-import {TableProps} from "../models/table-models";
+import {SortDirection, TableProps} from "../models/table-models";
+import {sortTableRows} from "./sorting-utils";
 
 export const createSimpleTable = <TData>(
   tableData: TData[],
@@ -9,6 +10,15 @@ export const createSimpleTable = <TData>(
   }
   const numberOfColumns = tableOptions.columns.length;
   let displayData: Array<string | number>[] = [];
+  let columnIndexToSort = -1;
+  let direction: SortDirection = undefined;
+
+  tableOptions.columns.forEach((column, index) => {
+    if (column.sortDirection !== undefined) {
+      columnIndexToSort = index;
+      direction = column.sortDirection;
+    }
+  })
 
   tableData.forEach((rowData: any) => {
     const tableRow: Array<string | number> = [];
@@ -24,12 +34,15 @@ export const createSimpleTable = <TData>(
           cellValue = rowData[columnHeader] ?? '';
         }
       }
-
       tableRow.push(cellValue);
     }
     displayData.push(tableRow);
   });
-  return displayData;
+  if (columnIndexToSort !== -1) {
+    return sortTableRows(displayData, columnIndexToSort, direction)
+  } else {
+    return displayData;
+  }
 };
 
 

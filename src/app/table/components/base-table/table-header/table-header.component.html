@@ -4,7 +4,7 @@
           [ngStyle]="{ 'width.px': setCellWidth(columnIndex) }">
       <span class="header-text">{{ headerCell }}</span>
       <div class="header-icon-container">
-          <span class="sort-icon"
+          <span *ngIf="columnInitializer.columns[columnIndex].sortable" class="sort-icon"
                 (click)="sortData(columnIndex)">
             <i class="fas fa-sm fa-solid fa-sort"></i>
           </span>

@@ -1,4 +1,4 @@
-import {CurrentSort, TableProps} from "../models/table-models";
+import {CurrentSort, SortDirection, TableProps} from "../models/table-models";
 
 export const determineSortDirection = (currentSort: CurrentSort, tableOptions: TableProps, columnIndex: number): any => {
     const currentColumn = tableOptions.columns[columnIndex];
@@ -27,12 +27,12 @@ export const determineSortDirection = (currentSort: CurrentSort, tableOptions: T
 export const sortTableRows = (
   tableData: Array<Array<string | number>>,
   columnIndex: number,
-  sortDirection: 'asc' | 'desc',
+  sortDirection: SortDirection,
 ): Array<Array<string | number>> => {
   return [...tableData.sort(sortByIndex(columnIndex, sortDirection))];
 }
 
-function sortByIndex(index: number, direction: string): (a: Array<string | number>, b: Array<string | number>) => number {
+function sortByIndex(index: number, direction: SortDirection): (a: Array<string | number>, b: Array<string | number>) => number {
   return (a: Array<string | number>, b: Array<string | number>) => {
     const valueA = a[index];
     const valueB = b[index];
