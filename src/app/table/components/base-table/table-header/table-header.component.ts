@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from "@angular/core";
+import {Component, HostListener, Input, OnDestroy, OnInit} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {RouterOutlet} from "@angular/router";
 import {ReactiveFormsModule} from "@angular/forms";
@@ -27,6 +27,8 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
   currentSort: CurrentSort = {column: '', direction: 'asc'};
   private _columnToSort$: Observable<number> = this.service.columnToSort$;
   private _ngUnsubscribe: Subject<void> = new Subject<void>();
+  private startX = 0;
+  private columnIndexResizing = -1;
 
   constructor(private service: TableDataService,
               private _rowDataService: RowDataService) {
@@ -41,6 +43,28 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this._ngUnsubscribe.next();
     this._ngUnsubscribe.complete();
+  }
+
+  onSeparatorMouseDown(event: MouseEvent, columnIndex: number) {
+    this.startX = event.clientX;
+    this.columnIndexResizing = columnIndex;
+
+    console.log("clicked")
+  }
+
+  @HostListener('document:mousemove', ['$event'])
+  onMouseMove(event: MouseEvent) {
+    if (this.columnIndexResizing >= 0) {
+      const movementX = event.clientX - this.startX;
+      this.startX = event.clientX;
+      this.columnInitializer.columns[this.columnIndexResizing].width = this.columnInitializer.columns[this.columnIndexResizing].width! + movementX
+
+
+    }
+  }
+  @HostListener('document:mouseup')
+  onMouseUp() {
+    this.columnIndexResizing = -1;
   }
 
   setCellWidth(columnIndex: number): number | undefined {
