@@ -52,25 +52,16 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
     console.log("clicked")
   }
 
-  // Function triggered when the mouse moves after pressing down on the separator
   @HostListener('document:mousemove', ['$event'])
   onMouseMove(event: MouseEvent) {
     if (this.columnIndexResizing >= 0) {
       const movementX = event.clientX - this.startX;
-      // You can use `movementX` to track the amount of horizontal movement of the mouse
-      console.log('MovementX:', movementX);
-      // Implement resizing logic here based on the movementX value
-      // For example, update the width of columns based on the movement
-      // this.updateColumnWidth(this.columnIndexResizing, movementX);
-
       this.startX = event.clientX;
       this.columnInitializer.columns[this.columnIndexResizing].width = this.columnInitializer.columns[this.columnIndexResizing].width! + movementX
 
 
     }
   }
-
-  // Function triggered when the mouse button is released after dragging the separator
   @HostListener('document:mouseup')
   onMouseUp() {
     this.columnIndexResizing = -1;
