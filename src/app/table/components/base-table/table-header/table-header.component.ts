@@ -27,8 +27,8 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
   currentSort: CurrentSort = {column: '', direction: 'asc'};
   private _columnToSort$: Observable<number> = this._service.columnToSort$;
   private _ngUnsubscribe: Subject<void> = new Subject<void>();
-  private startX = 0;
-  private columnIndexResizing = -1;
+  private _startX = 0;
+  private _columnIndexResizing = -1;
 
   constructor(private _service: TableDataService,
               private _rowDataService: RowDataService) {
@@ -46,22 +46,22 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
   }
 
   onSeparatorMouseDown(event: MouseEvent, columnIndex: number) {
-    this.startX = event.clientX;
-    this.columnIndexResizing = columnIndex;
+    this._startX = event.clientX;
+    this._columnIndexResizing = columnIndex;
   }
 
   @HostListener('document:mousemove', ['$event'])
   onMouseMove(event: MouseEvent) {
-    if (this.columnIndexResizing >= 0) {
-      const movementX = event.clientX - this.startX;
-      this.startX = event.clientX;
-      this.columnInitializer.columns[this.columnIndexResizing].width = this.columnInitializer.columns[this.columnIndexResizing].width! + movementX;
+    if (this._columnIndexResizing >= 0) {
+      const movementX = event.clientX - this._startX;
+      this._startX = event.clientX;
+      this.columnInitializer.columns[this._columnIndexResizing].width = this.columnInitializer.columns[this._columnIndexResizing].width! + movementX;
     }
   }
 
   @HostListener('document:mouseup')
   onMouseUp() {
-    this.columnIndexResizing = -1;
+    this._columnIndexResizing = -1;
   }
 
   setCellWidth(columnIndex: number): number | undefined {
