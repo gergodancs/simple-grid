@@ -34,7 +34,6 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
               private _rowDataService: RowDataService) {
   }
 
-
   ngOnInit(): void {
     this.tableHeader = initTableHeaders(this.columnInitializer);
     this._sortSubscription().subscribe();
