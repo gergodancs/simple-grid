@@ -37,6 +37,7 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.tableHeader = initTableHeaders(this.columnInitializer);
     this._sortSubscription().subscribe();
+    this._initialSort();
   }
 
   ngOnDestroy(): void {
@@ -80,6 +81,15 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
     this._service.setColumnToFilter(-1);
     this._service.setColumnToFilter(columnIndex);
     this._service.setFilterValue('');
+  }
+
+  private _initialSort() {
+    const sortableColumnIndex: number | null = this.columnInitializer.columns
+      .findIndex((columnProp) =>
+        Object.hasOwn(columnProp, 'sortBy'));
+    if (sortableColumnIndex) {
+      this._rowDataService.sortTableRows(sortableColumnIndex, this.columnInitializer.columns[sortableColumnIndex]?.sortDirection);
+    }
   }
 
   private _sortSubscription(): Observable<any> {

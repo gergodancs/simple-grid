@@ -1,12 +1,12 @@
+<header>
+  <nav class="navbar">
+    <a class="nav-item" routerLink="/simple-grid" routerLinkActive="active">Simple grid</a>
+    <a class="nav-item" routerLink="/grid" routerLinkActive="active">Grid</a>
+  </nav>
+</header>
 <main>
-  <div>
-    <h4>Universal table demo</h4>
-  </div>
-  <d-table
-    [tableData]="dummyData"
-    [columnInitializer]="columnInitializer">
-  </d-table>
+  <router-outlet></router-outlet>
 </main>
 
 
-<router-outlet></router-outlet>
+
