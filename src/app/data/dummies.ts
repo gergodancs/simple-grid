@@ -12,6 +12,7 @@ export const dummyData = [
 ];
 export const  columnInitializer: TableProps = {
   onRowSelected: (data: any) => console.log(data),
+  movableRows: true,
   columns: [
     {
       field: 'id',

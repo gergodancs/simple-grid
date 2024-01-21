@@ -1,6 +1,6 @@
 import {Routes} from '@angular/router';
-import {SimpleGridComponent} from "./simple-grid/simple-grid.component";
-import {GridComponent} from "./grid/grid.component";
+import {SimpleGridComponent} from "./simple-grid-page/simple-grid.component";
+import {GridComponent} from "./grid-page/grid.component";
 
 export const routes: Routes = [
 

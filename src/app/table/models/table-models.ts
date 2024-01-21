@@ -11,7 +11,6 @@ export interface TableProps {
   /**
    * Set it true to let user sort rows by drag and drop
    */
-  // todo: implement functionality
   movableRows?: boolean;
   /**
    * The list of column initializer.
