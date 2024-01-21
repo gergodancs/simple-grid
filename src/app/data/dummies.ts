@@ -10,9 +10,8 @@ export const dummyData = [
   {id: 7, name: {firstName: "Sophie"}, age: 27, city: 'Berlin', country: 'Germany', occupation: 'Scientist'},
   {id: 8, name: {firstName: "Mia"}, age: 29, city: 'Tokyo', country: 'Japan', occupation: 'Writer'},
 ];
-const onRowSelected = (data: any) => console.log(data);
 export const  columnInitializer: TableProps = {
-  onRowSelected: onRowSelected,
+  onRowSelected: (data: any) => console.log(data),
   columns: [
     {
       field: 'id',
