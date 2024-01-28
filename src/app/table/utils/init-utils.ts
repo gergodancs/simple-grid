@@ -6,9 +6,11 @@ export const createSimpleTable = <TData>(
   tableOptions: TableProps
 ): Array<Array<string | number>> => {
   if (tableData.length === 0) {
+    console.log('nincs data');
     return [];
   }
   const numberOfColumns = tableOptions.columns.length;
+  console.log(numberOfColumns)
   let displayData: Array<string | number>[] = [];
   let columnIndexToSort = -1;
   let direction: SortDirection = undefined;
@@ -41,6 +43,7 @@ export const createSimpleTable = <TData>(
   if (columnIndexToSort !== -1) {
     return sortTableRows(displayData, columnIndexToSort, direction)
   } else {
+    console.log('displaay:', displayData)
     return displayData;
   }
 };

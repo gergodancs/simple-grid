@@ -1,0 +1,72 @@
+@import '../../../../node_modules/@fortawesome/fontawesome-free/css/all.css';
+
+
+.create-grid-form {
+  margin: 0 auto;
+  display: flex;
+  justify-self: flex-start;
+  align-items: center;
+}
+form{
+  display: flex;
+  align-items: center;
+}
+
+.header-input-container{
+  display: flex;
+}
+
+.ro
+.icon-plus {
+  line-height: 1.7em;
+  font-weight: bold;
+}
+
+.header-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.create-table-container {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.row-title {
+  margin-top: 20px;
+}
+
+input {
+  outline: none;
+  border: 1px solid lightgray;
+  padding: 6px;
+  border-radius: 3px;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
+}
+.width {
+  width: 35px;
+}
+i:hover {
+  cursor: pointer;
+}
+button{
+  border: none;
+  background-color: transparent;
+}
+input.ng-touched.ng-invalid {
+  border-color: red;
+}
+
+.row-input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  box-sizing: border-box;
+  span {
+    position: absolute;
+    font-size: 10px;
+    color: red;
+  }
+}

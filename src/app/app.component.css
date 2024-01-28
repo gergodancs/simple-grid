@@ -42,9 +42,10 @@ header .navbar {
 }
 
 main {
+  display: block;
   height: calc(100vh - 100px);
   overflow: auto;
-  display: flex;
   justify-content: center;
   padding-top: 20px;
 }
+

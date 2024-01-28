@@ -1,8 +1,8 @@
 import {Component} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {RouterOutlet} from "@angular/router";
-import {TableComponent} from "../table/components/base-table/base-table.component";
-import {columnInitializer, dummyData} from "../data/dummies";
+import {TableComponent} from "../../table/components/base-table/base-table.component";
+import {columnInitializer, dummyData} from "../../data/dummies";
 
 
 @Component({

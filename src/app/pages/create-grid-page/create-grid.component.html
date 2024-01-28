@@ -1,0 +1,50 @@
+<b>Create header: </b>
+<div class="create-grid-form">
+  <form class="header-form" [formGroup]="headerFormGroup">
+    <div formArrayName="formArray" *ngFor="let group of formArray.controls; let i = index;">
+      <div [formGroupName]="i">
+        <input formControlName="header" placeholder="Header">
+        <input class="width" formControlName="width" placeholder="Width">
+      </div>
+    </div>
+
+    <span (click)="addInputField()">
+      <i class="fas fa-plus fa-xl icon-plus"></i>
+    </span>
+    <span (click)="createColumnInitializer()">
+      <i class="fas fa-save fa-xl icon-plus"></i>
+    </span>
+  </form>
+</div>
+@if (columnInitializer.columns.length > 0) {
+  <b>Create rows: </b>
+  <form class="header-form" [formGroup]="rowFormGroup">
+    <ng-container class="header-input-container"
+
+                  *ngFor="let control of formArray.controls; index as i">
+      <div class="row-input-container">
+        <input [formControlName]="i">
+        @if (fieldIsInvalid(i)) {
+          <span>Field is required</span>
+        }
+      </div>
+
+
+    </ng-container>
+    <button [disabled]="hasErrorsInRowForm()" (click)="createRowData()">
+      <i class="fas fa-save fa-xl icon-plus"></i>
+    </button>
+  </form>
+
+
+}
+@if (columnInitializer.columns.length > 0) {
+  <div class="create-table-container">
+    <d-table
+      [data]="dataSignal()"
+      [tableData]="[]"
+      [columnInitializer]="columnInitializer">
+    </d-table>
+  </div>
+}
+

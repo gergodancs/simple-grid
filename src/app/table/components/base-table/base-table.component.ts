@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from "@angular/core";
+import {Component, effect, input, Input, OnDestroy, OnInit, Signal} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {RouterOutlet} from "@angular/router";
 import {createMapFromTableData} from "../../utils/utils";
@@ -24,14 +24,22 @@ export class TableComponent implements OnInit, OnDestroy {
   columnInitializer!: TableProps;
   @Input()
   tableData: any;
+
+  data = input<any>([]) ;
+
   private _ngUnsubscribe: Subject<void> = new Subject<void>();
 
   constructor(private _rowDataService: RowDataService) {
+    effect(() => {
+      if(this.data().length > 0){
+      this._initTable(this.data())
+      }
+    });
   }
 
   ngOnInit(): void {
     if (this.tableData && this.tableData.length > 0) {
-      this._initTable();
+      this._initTable(this.tableData);
     }
   }
 
@@ -40,8 +48,8 @@ export class TableComponent implements OnInit, OnDestroy {
     this._ngUnsubscribe.complete();
   }
 
-  private _initTable() {
-    const originalTableData = createSimpleTable(this.tableData, this.columnInitializer);
+  private _initTable(arr: any) {
+    const originalTableData = createSimpleTable(arr, this.columnInitializer);
     this._rowDataService.setTableRowData([...originalTableData]);
     this._rowDataService.setOriginalRowData([...originalTableData]);
     this.mappedData = createMapFromTableData(this.tableData);
