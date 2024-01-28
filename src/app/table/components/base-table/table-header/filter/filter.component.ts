@@ -1,10 +1,9 @@
-import {Component, effect, Input, OnDestroy, OnInit, signal} from "@angular/core";
+import {Component, effect, Input, signal} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {RouterOutlet} from "@angular/router";
 import {ReactiveFormsModule} from "@angular/forms";
 import {TableDataService} from "../../../../service/table-service";
 import {RowDataService} from "../../../../service/data-service";
-import {Subject} from "rxjs";
 import {FilterType, TableProps} from "../../../../models/table-models";
 
 
@@ -35,7 +34,7 @@ export class FilterInputComponent {
       }
     });
   }
-  setInputWidth(cellIndex: number, input: HTMLElement): number | undefined {
+  setInputWidth(cellIndex: number): number | undefined {
     return this.columnInitializer.columns[cellIndex].width;
   }
   onFilterColumn($event: any, filterType: FilterType) {
