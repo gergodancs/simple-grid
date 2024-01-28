@@ -1,4 +1,4 @@
-<form class="filter-form" *ngIf="columnIndex===(columnToFilter$ |async)">
+<form class="filter-form" *ngIf="columnIndex===(columnSignal())">
   <input #filterInput
          placeholder="Contains..."
          class="filter-input"

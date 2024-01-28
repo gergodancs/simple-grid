@@ -20,9 +20,6 @@ export class RowDataService {
   private _selectedRowDataSubject: BehaviorSubject<any> = new BehaviorSubject<any>({});
   public selectedRowData$: Observable<any> = this._selectedRowDataSubject.asObservable();
 
-  private _filterType: FilterType = FilterType.Contains;
-
-
   setTableRowData(tableData: any[]): void {
     this._actualTableRows = [...tableData];
     this._tableRowDataSubject.next(tableData);
@@ -46,14 +43,7 @@ export class RowDataService {
     }
   }
 
-  setFilterType(type: FilterType) {
-    this._filterType = type;
-  }
-
-  filterTableRows(columnIndex: number, filterValue: string) {
-    console.log("columnIndex", columnIndex);
-    console.log("value", filterValue);
-    console.log("type", this._filterType);
+  filterTableRows(columnIndex: number, filterValue: string, filterTyp: FilterType) {
     if (!filterValue && columnIndex === -1) {
       // it runs when the filter is cleared or toggle between filter inputs
       return;
@@ -63,7 +53,7 @@ export class RowDataService {
 
     let filteredTableRows: any[];
 
-    switch (this._filterType) {
+    switch (filterTyp) {
       case FilterType.Contains:
         filteredTableRows = this._originalTableRows.filter((row: any) =>
           row[columnIndex].toString().toLowerCase().includes(filterValue.toLowerCase())

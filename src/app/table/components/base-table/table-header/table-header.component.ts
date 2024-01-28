@@ -78,9 +78,12 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
 
   onFilterIconClick(event: Event, columnIndex: number): void {
     event.stopPropagation();
-    this._service.setColumnToFilter(-1);
+    this._service.setFilterColumn(-1);
+    this._service.setFilterColumn(columnIndex);
+    this._service.setFilterSignal('')
+  /*  this._service.setColumnToFilter(-1);
     this._service.setColumnToFilter(columnIndex);
-    this._service.setFilterValue('');
+    this._service.setFilterValue('');*/
   }
 
   private _initialSort() {

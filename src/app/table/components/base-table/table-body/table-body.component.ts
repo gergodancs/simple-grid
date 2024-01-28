@@ -61,7 +61,7 @@ export class TableBodyComponent implements OnInit, OnDestroy {
 
   setSelectedRow(rowIndex: number): void {
     this._rowDataService.setSelectedRowData(rowIndex);
-    this._service.setColumnToFilter(-1);
+    this._service.setFilterColumn(-1);
     this.selectedRow!.rowIndex = rowIndex;
   }
 
